@@ -24,4 +24,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json(parsedResume);
   } catch (error) {
-    return NextResponse.json({ error: "Unable to parse 
+    return NextResponse.json({ error: "Unable to parse resume PDF." }, { status: 500 });
+  }
+}
