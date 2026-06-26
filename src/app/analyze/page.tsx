@@ -83,8 +83,8 @@ export default function AnalyzePage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-950 px-4 py-10 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-5xl space-y-8">
+    <main className="min-h-screen bg-background px-4 py-14 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full max-w-5xl space-y-10">
         <Card>
           <CardContent>
             <div className="space-y-3">
@@ -104,7 +104,7 @@ export default function AnalyzePage() {
               <label
                 onDrop={handleDrop}
                 onDragOver={(event) => event.preventDefault()}
-                className="block cursor-pointer rounded-3xl border border-dashed border-slate-700 bg-slate-950/70 p-8 text-center transition hover:border-sky-400/60"
+                className="block cursor-pointer rounded-3xl border border-dashed border-slate-700 bg-card/80 p-8 text-center text-slate-100 transition hover:border-sky-400/60"
               >
                 <input
                   type="file"
@@ -124,7 +124,7 @@ export default function AnalyzePage() {
                 </div>
               </label>
 
-              <div className="rounded-3xl border border-slate-800 bg-slate-950/80 p-6">
+              <div className="rounded-3xl border border-slate-800 bg-card/80 p-6">
                 <h2 className="text-base font-semibold text-white">Resume preview</h2>
                 <p className="mt-2 text-sm leading-6 text-slate-400">
                   Once uploaded, resume sections are extracted for transparency and debugging.
@@ -133,7 +133,7 @@ export default function AnalyzePage() {
                 <div className="mt-5 max-h-96 space-y-4 overflow-auto pr-2">
                   {parsedResume ? (
                     parsedResume.chunks.map((chunk) => (
-                      <div key={chunk.id} className="rounded-3xl border border-slate-800 bg-slate-900/80 p-4">
+                      <div key={chunk.id} className="rounded-3xl border border-slate-800 bg-card/90 p-4">
                         <p className="text-xs uppercase tracking-[0.24em] text-slate-500">
                           {chunk.section}
                         </p>
