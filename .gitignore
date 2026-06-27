@@ -1,0 +1,27 @@
+# Environment
+.env*
+!.env.example
+
+# Build outputs
+.next
+dist
+build
+
+# Dependencies
+node_modules
+/.pnp
+.pnp.js
+
+# Cache
+.cache
+.vercel
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
