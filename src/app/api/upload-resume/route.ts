@@ -58,7 +58,7 @@ export async function POST(request: Request) {
 
     const parsedResume: ParsedResume = { rawText, chunks: chunksWithEmbeddings };
 
-    return NextResponse.json({ resumeId, chunks: parsedResume.chunks });
+    return NextResponse.json({ resumeId, ...parsedResume });
   } catch (error) {
     console.error("Resume upload error:", error);
     return NextResponse.json({ error: "Unable to process resume." }, { status: 500 });
