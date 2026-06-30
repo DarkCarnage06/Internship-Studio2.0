@@ -33,3 +33,16 @@
 **Blockers / what I'm stuck on:** The match score is currently just a weighted average of similarity scores — it's a reasonable heuristic but I haven't validated it against human judgment yet. Need to sanity check whether 66% actually "feels" like a strong match to a real person.
 
 **Plan for tomorrow:** Build the LLM reasoning layer — pass the top-5 retrieved chunks to Claude, generate a grounded explanation of the match (not just a number), and implement graceful fallback if the API fails.
+Append this exact content to DEVLOG.md at the root. Do not overwrite anything:
+
+## Day 4 — [TODAYS_DATE]
+
+**Hours worked:** 3
+
+**What I did:** Built the LLM reasoning layer using Claude API to generate grounded match explanations. Designed the prompt to strictly limit Claude to only reasoning about the retrieved chunks provided — explicit instructions against inventing or assuming experience not present in the evidence. Structured the output as JSON with summary, strengths, and gaps fields. Built a complete template-based fallback that works without any API key, tested it end-to-end since I don't have an Anthropic key yet. Fixed a string interpolation bug in the fallback where section names duplicated ("experience experience"). Added 5 unit tests for the fallback logic.
+
+**What I learned:** Grounding an LLM prompt isn't just "be accurate" — it requires structurally limiting what data the model has access to (only top-k chunks, not the full resume) AND explicitly instructing it not to fill gaps with assumptions. The fallback path is just as important as the AI path — a real product can't break just because an API key is missing or a request times out.
+
+**Blockers / what I'm stuck on:** Haven't tested the real Claude-generated path yet since I don't have API credits — only verified the fallback. Will need to test this before considering the feature fully complete.
+
+**Plan for tomorrow:** Integrate live internship listings from a free job API, auto-rank them against the user's resume using the same retrieval pipeline, and build a final results UI showing ranked internship matches.

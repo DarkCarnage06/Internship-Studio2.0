@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export default function ResultsPage() {
   const router = useRouter();
-  const { matchScore, retrievedChunks } = useResumeStore();
+  const { matchScore, retrievedChunks, analysis } = useResumeStore();
 
   return (
     <main className="min-h-screen">
@@ -45,6 +45,49 @@ export default function ResultsPage() {
             </div>
           </CardContent>
         </Card>
+
+        {analysis ? (
+          <Card className="bg-slate-900/50 border border-slate-800 rounded-xl p-8">
+            <CardContent className="space-y-6">
+              <div className="flex items-center justify-between gap-3">
+                <h3 className="text-xl font-semibold text-white">Why this match</h3>
+                <span className="rounded-full border border-slate-700 bg-slate-800 px-3 py-1 text-xs font-medium uppercase tracking-[0.24em] text-slate-300">
+                  {analysis.isAiGenerated ? 'AI Generated' : 'Template Summary'}
+                </span>
+              </div>
+
+              <p className="text-sm leading-7 text-slate-300">{analysis.summary}</p>
+
+              {analysis.strengths.length > 0 ? (
+                <div className="space-y-3">
+                  <p className="text-sm font-semibold uppercase tracking-[0.24em] text-emerald-400">Strengths</p>
+                  <ul className="space-y-2">
+                    {analysis.strengths.map((strength) => (
+                      <li key={strength} className="flex items-start gap-2 text-sm text-slate-300">
+                        <span className="mt-1 text-emerald-400">●</span>
+                        <span>{strength}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+
+              {analysis.gaps.length > 0 ? (
+                <div className="space-y-3">
+                  <p className="text-sm font-semibold uppercase tracking-[0.24em] text-amber-400">Gaps</p>
+                  <ul className="space-y-2">
+                    {analysis.gaps.map((gap) => (
+                      <li key={gap} className="flex items-start gap-2 text-sm text-slate-300">
+                        <span className="mt-1 text-amber-400">●</span>
+                        <span>{gap}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+            </CardContent>
+          </Card>
+        ) : null}
 
         <div className="space-y-4">
           {retrievedChunks.length > 0 ? (

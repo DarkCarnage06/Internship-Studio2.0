@@ -119,7 +119,7 @@ export default function AnalyzePage() {
         throw new Error(data.error || "Unable to analyze the match.");
       }
 
-      setMatchResult(data.matchScore, data.retrievedChunks);
+      setMatchResult(data.matchScore, data.retrievedChunks, data.analysis ?? null);
       router.push("/results");
     } catch (error) {
       setAnalysisError(error instanceof Error ? error.message : "Analysis failed.");

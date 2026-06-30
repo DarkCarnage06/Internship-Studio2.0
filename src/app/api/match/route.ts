@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { retrieveTopChunks, calculateOverallMatchScore } from "@/lib/retrieval";
+import { generateMatchAnalysis } from "@/lib/reasoning";
 import { sql } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -30,8 +31,9 @@ export async function POST(request: Request) {
 
     const retrievedChunks = await retrieveTopChunks(resumeId, jobDescription, 5);
     const matchScore = calculateOverallMatchScore(retrievedChunks);
+    const analysis = await generateMatchAnalysis(jobDescription, retrievedChunks, matchScore);
 
-    return NextResponse.json({ matchScore, retrievedChunks });
+    return NextResponse.json({ matchScore, retrievedChunks, analysis });
   } catch (error) {
     console.error("Match analysis error:", error);
     return NextResponse.json({ error: "Unable to analyze the match." }, { status: 500 });
