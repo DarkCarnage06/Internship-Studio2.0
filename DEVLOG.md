@@ -59,3 +59,16 @@ Append this exact content to DEVLOG.md at the root. Do not overwrite anything:
 **Blockers / what I'm stuck on:** No India-specific free job API exists without an API key signup — Arbeitnow is the best zero-friction option but has weak India coverage. A future iteration could add JSearch (RapidAPI) as a second source for proper India-localized results.
 
 **Plan for tomorrow:** Final day — add proper tests for previously untested areas, write ARCHITECTURE.md, README, and any other documentation needed, do a final deploy check, and wrap the project.
+Append this exact content to DEVLOG.md at the root. Do not overwrite anything:
+
+## Day 6 — [TODAYS_DATE]
+
+**Hours worked:** 2
+
+**What I did:** Wrote README.md and ARCHITECTURE.md with a full Mermaid system diagram, data flow explanation, stack justification, and a "what I'd change at scale" section. Documented the v1-to-v2 evolution story — replacing TF-IDF keyword matching with real semantic embeddings and vector search. Ran the full test suite together to confirm all tests across similarity, retrieval, reasoning, and job-ranking pass without conflicts. Did a final production smoke test on the deployed Vercel URL to confirm parity with local development.
+
+**What I learned:** Writing the architecture doc after the fact, rather than before, made it much easier to write honestly about trade-offs — I could point to specific decisions I actually made under time pressure (like the Arbeitnow remote-bias workaround) instead of writing aspirational documentation that doesn't match the real implementation.
+
+**Blockers / what I'm stuck on:** None — the project is feature-complete and documented. The main known limitation, clearly disclosed in the README, is the lack of India-specific job listing coverage without a paid API key.
+
+**Plan going forward:** Project is complete for now. Future iterations could add real Claude-generated reasoning (currently only tested via the template fallback since I don't have API credits), a proper India job source, and embedding caching for repeated job descriptions.
