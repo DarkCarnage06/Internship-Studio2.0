@@ -46,3 +46,16 @@ Append this exact content to DEVLOG.md at the root. Do not overwrite anything:
 **Blockers / what I'm stuck on:** Haven't tested the real Claude-generated path yet since I don't have API credits — only verified the fallback. Will need to test this before considering the feature fully complete.
 
 **Plan for tomorrow:** Integrate live internship listings from a free job API, auto-rank them against the user's resume using the same retrieval pipeline, and build a final results UI showing ranked internship matches.
+Append this exact content to DEVLOG.md at the root. Do not overwrite anything:
+
+## Day 5 — [TODAYS_DATE]
+
+**Hours worked:** 3
+
+**What I did:** Integrated live job listings from the Arbeitnow public API and built a ranking pipeline that embeds all fetched listings in a single batched call, then scores each against the user's resume chunk embeddings using the same cosine similarity logic from Day 3. Since Arbeitnow doesn't support server-side country filtering and is Europe-focused, I biased results toward remote-tagged listings client-side, since those are realistically what most candidates outside Europe can apply to. Added a clear disclaimer in the UI about this limitation rather than overstating the tool's coverage. Extracted a pure scoreAndRankJobs function (mirroring the rankChunks pattern from Day 3) so the ranking logic is fully unit-testable without live API calls. Added 5 tests covering empty inputs, sort order, score bounds, and a perfect-match edge case.
+
+**What I learned:** Reusing an established pattern (extract pure scoring logic, test it in isolation, keep API calls in a thin wrapper) made this feature much faster to build than Day 3's retrieval pipeline, even though it's doing something new (batch embedding multiple listings at once). Also learned that being upfront about a tool's limitations in the UI (the remote-bias disclaimer) is better than silently underdelivering on an implied promise.
+
+**Blockers / what I'm stuck on:** No India-specific free job API exists without an API key signup — Arbeitnow is the best zero-friction option but has weak India coverage. A future iteration could add JSearch (RapidAPI) as a second source for proper India-localized results.
+
+**Plan for tomorrow:** Final day — add proper tests for previously untested areas, write ARCHITECTURE.md, README, and any other documentation needed, do a final deploy check, and wrap the project.

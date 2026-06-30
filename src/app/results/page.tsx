@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useResumeStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,10 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export default function ResultsPage() {
   const router = useRouter();
-  const { matchScore, retrievedChunks, analysis } = useResumeStore();
+  const { resumeId, matchScore, retrievedChunks, analysis } = useResumeStore();
+  const [isLoadingJobs, setIsLoadingJobs] = useState(false);
+  const [recommendedJobsMessage, setRecommendedJobsMessage] = useState<string | null>(null);
+  const [recommendedJobs, setRecommendedJobs] = useState<any[]>([]);
 
   return (
     <main className="min-h-screen">
@@ -88,6 +92,87 @@ export default function ResultsPage() {
             </CardContent>
           </Card>
         ) : null}
+
+        <Card className="bg-slate-900/50 border border-slate-800 rounded-xl p-8">
+          <CardContent className="space-y-6">
+            <div className="space-y-2">
+              <h3 className="text-xl font-semibold text-white">Live Job Opportunities Matched to Your Resume</h3>
+              <p className="text-sm text-slate-400">Listings sourced from Arbeitnow (Europe-focused, remote-friendly roles prioritized). Best for remote and international opportunities.</p>
+            </div>
+
+            <Button
+              type="button"
+              onClick={async () => {
+                if (!resumeId) return;
+                setIsLoadingJobs(true);
+                setRecommendedJobsMessage(null);
+                setRecommendedJobs([]);
+
+                try {
+                  const response = await fetch('/api/recommended-jobs', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ resumeId }),
+                  });
+
+                  const data = await response.json();
+
+                  if (!response.ok) {
+                    throw new Error(data.error || 'Unable to load recommended jobs.');
+                  }
+
+                  setRecommendedJobs(data.rankedJobs || []);
+                  setRecommendedJobsMessage(data.message || null);
+                } catch (error) {
+                  setRecommendedJobsMessage(error instanceof Error ? error.message : 'Unable to load recommended jobs right now.');
+                } finally {
+                  setIsLoadingJobs(false);
+                }
+              }}
+              className="w-full py-3"
+              disabled={!resumeId || isLoadingJobs}
+            >
+              {isLoadingJobs ? 'Embedding live listings against your resume — this takes a moment...' : 'Load Recommended Jobs'}
+            </Button>
+
+            {recommendedJobsMessage ? (
+              <p className="text-sm text-slate-400">{recommendedJobsMessage}</p>
+            ) : null}
+
+            {recommendedJobs.length > 0 ? (
+              <div className="space-y-4">
+                {recommendedJobs.map((job) => {
+                  const badgeClass = job.matchScore > 60 ? 'bg-emerald-500 text-white' : job.matchScore >= 40 ? 'bg-yellow-400 text-black' : 'bg-slate-600 text-white';
+
+                  return (
+                    <Card key={job.id} className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                      <CardContent className="space-y-4 p-0">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="space-y-1">
+                            <h4 className="text-lg font-semibold text-white">{job.title}</h4>
+                            <p className="text-sm text-slate-400">{job.companyName}</p>
+                          </div>
+                          <div className={`rounded-full px-3 py-1 text-sm font-semibold ${badgeClass}`}>{job.matchScore}%</div>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="rounded-full border border-slate-700 bg-slate-800 px-3 py-1 text-xs uppercase tracking-[0.24em] text-slate-300">{job.location}</span>
+                          {job.remote ? <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs uppercase tracking-[0.24em] text-emerald-400">Remote</span> : null}
+                        </div>
+
+                        <p className="text-sm leading-6 text-slate-300">{job.description}</p>
+
+                        <a href={job.url} target="_blank" rel="noreferrer" className="inline-flex text-sm font-medium text-sky-400 hover:text-sky-300">
+                          View Job →
+                        </a>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            ) : null}
+          </CardContent>
+        </Card>
 
         <div className="space-y-4">
           {retrievedChunks.length > 0 ? (
